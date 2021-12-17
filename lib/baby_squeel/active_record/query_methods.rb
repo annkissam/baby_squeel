@@ -42,7 +42,7 @@ module BabySqueel
       # BabySqueel::Join nodes.
       if ::ActiveRecord::VERSION::MAJOR == 6
         def build_joins(*args)
-          args[1] = BabySqueel::JoinDependency::Injector.new(args.second)
+          args[1] = BabySqueel::JoinDependency::Injector6_0.new(args.second)
           super *args
         end
       elsif ::ActiveRecord::VERSION::MAJOR == 5 && ::ActiveRecord::VERSION::MINOR >= 2

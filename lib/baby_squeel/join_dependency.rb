@@ -68,6 +68,29 @@ module BabySqueel
       end
     end
 
+    # This class allows BabySqueel to slip custom
+    # joins_values into Active Record's JoinDependency
+    class Injector6_0 < Array # :nodoc:
+      # https://github.com/rails/rails/pull/36805/files
+      # This commit changed group_by to each
+      def each(&block)
+        super do |join|
+          if block.binding.local_variables.include?(:buckets)
+            buckets = block.binding.local_variable_get(:buckets)
+
+            case join
+            when BabySqueel::Join
+              buckets[:association_join] << join
+            else
+              block.call(join)
+            end
+          else
+            block.call(join)
+          end
+        end
+      end
+    end
+
     class Builder # :nodoc:
       attr_reader :join_dependency
 
